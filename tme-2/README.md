@@ -124,10 +124,12 @@ if (value != nullptr) {
 > 
 > Après avoir chargé le livre, initialiser un `std::vector<pair<string, int>>`, par copie des entrées dans la table de hash. On pourra utiliser le contructeur par copie d'une range : `vector(InputIterator first, InputIterator last)`.
 
-
+On initialise un `std::vector<pair<string, int>>` comme ceci :
 ```cpp
-std::vector<pair<string, int>> vectory_copy;
-
+std::vector<pair<string, int>> vectory_copy {
+    std::begin(words_map.buckets),
+    std::end(words_map.buckets)
+  };
 ```
 
 > **Question 8**
@@ -137,12 +139,20 @@ std::vector<pair<string, int>> vectory_copy;
 > `std::sort` prend les itérateurs de début et fin de la zone à trier, et un prédicat binaire. Voir l'exemple
 suivant.
 
+Pour trier ce vecteur par nombre d'occurences décroissantes :
 ```cpp
 std::sort(vectory_copy.begin(),
-          vectory_copy.end(),
-          [](const pair<string, int> & a, const pair<string, int> & b) {
-  return a.second > b.second;
-});
+            vectory_copy.end(),
+            [](const pair<string, int> & a, const pair<string, int> & b) {
+    return a.second > b.second;
+  });
+
+  int cpt = 0;
+  for (const auto & e : vectory_copy) {
+    cout << cpt << ". " << e.first << " : " << e.second << endl;
+
+    if (++cpt > 10) break;
+  }
 ```
 
 
@@ -150,3 +160,4 @@ std::sort(vectory_copy.begin(),
 > 
 > S'il vous reste du temps, remplacer les `forward_list` et `vector` utilisés par votre classe HashMap par vos propres implantations `List`, `Vector` comme discuté en TD. Ajouter les opérations nécessaires au fonctionnement de votre table de hash dans ces classes.
 
+Facultatif.
