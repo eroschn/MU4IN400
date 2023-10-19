@@ -161,3 +161,80 @@ std::sort(vectory_copy.begin(),
 > S'il vous reste du temps, remplacer les `forward_list` et `vector` utilisés par votre classe HashMap par vos propres implantations `List`, `Vector` comme discuté en TD. Ajouter les opérations nécessaires au fonctionnement de votre table de hash dans ces classes.
 
 Facultatif.
+
+
+## TME-3 : Iterator, Algorithme
+
+### 1.1. Algorithme
+
+> **Question 1**
+
+```cpp
+template <typename iterator>
+size_t count(iterator begin, iterator end) {
+  size_t count = 0;
+
+  while (begin != end) {
+    count++;
+    begin++;
+  }
+
+  return count;
+}
+```
+
+> **Question 2**
+
+```cpp
+template <typename iterator, typename T>
+size_t count_if_equal(iterator begin, iterator end, const T& val) {
+  size_t count = 0;
+
+  while (begin != end) {
+    if (*begin == val) count++;
+    begin++;
+  }
+  return count;
+}
+```
+
+> **Question 3**
+
+C.f. `main.cpp`.
+
+### 1.2. Itérateurs sur HashMap
+
+> **Question 4**
+
+```cpp
+class iterator {
+  std::vector<std::forward_list<Entry>> & buckets;
+  size_t vit; // pointe vers une case du vecteur
+  typename std::forward_list<Entry>::iterator lit; // pointe vers une case de la liste
+
+public:
+  iterator(std::vector<std::forward_list<Entry>> &b) : buckets(b), vit(0), lit(nullptr) {}
+
+  iterator &operator++() {
+    ++lit;
+    while (vit < buckets.size() && lit == buckets[vit].end()) {
+      ++vit;
+      if (vit < buckets.size()) {
+        lit = buckets[vit].begin();
+      }
+    }
+    return *this;
+  }
+
+  bool operator!=(iterator &other) const {
+    return vit != other.vit;
+  }
+
+  Entry &operator*() {
+    return *lit;
+  }
+};
+```
+
+> **Question 5**
+

@@ -9,9 +9,14 @@ namespace pr {
 void Banque::transfert(size_t deb, size_t cred, unsigned int val) {
 	Compte & debiteur = comptes[deb];
 	Compte & crediteur = comptes[cred];
+
+  unique_lock<mutex> debiteur_mutex (debiteur.getMutex());
+  unique_lock<mutex> crediteur_mutex (crediteur.getMutex());
+
 	if (debiteur.debiter(val)) {
 		crediteur.crediter(val);
 	}
+
 }
 size_t Banque::size() const {
 	return comptes.size();
