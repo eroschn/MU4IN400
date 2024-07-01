@@ -1,9 +1,9 @@
-project('tme-6', 'cpp', default_options: ['cpp_std=c++17'])
+project('tme-7', 'cpp', default_options: ['cpp_std=c++17'])
 
-inc = ['src/rsleep.h']
-src = ['src/rsleep.cpp']
+executable('tme7', 'src/prod_cons.cpp', link_args: '-lrt')
 
-executable('tme6', src, 'src/fork_exo.cpp')
+
+# executable('ex1', 'src/pipe.cpp')
 
 
 

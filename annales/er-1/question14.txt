@@ -1,0 +1,3 @@
+Si le calcul de chaque résultat a une durée homogène, la différence entre notre implantationn et celui avec un Pool de thread ne change pas grand chose.
+
+Par contre, si le calcul de chaque résultat a une durée hétérogène, la version avec un Pool de thread sera plus performante. En effet, avec notre version si certaines tâches se terminent plus rapidement que d'autres, des threads ne seront plus utilisés alors qu'il reste du travail à effectuer.

@@ -1,8 +1,31 @@
-//
-// Created by Eros Chan on 20/10/2023.
-//
+#pragma once
 
-#ifndef MU4IN400_BARRIER_H
-#define MU4IN400_BARRIER_H
+#include <cstdlib>
+#include <mutex>
 
-#endif //MU4IN400_BARRIER_H
+namespace pr {
+
+  class Barrier {
+    mutable std::mutex m;
+    std::condition_variable cond;
+    int cpt;
+    const int goal;
+
+  public:
+
+    Barrier(int N) : goal(N) {}
+
+    void done() {
+      std::unique_lock<std::mutex> lg(m);
+      cpt++;
+      // notifie la condition sur goal atteint
+      if (cpt == goal) cond.notify_all();
+    }
+
+    void waitFor() {
+      std::unique_lock<std::mutex> lg(m);
+      cond.wait(lg, [&]() { return cpt == goal; });
+    }
+  };
+
+}

@@ -14,6 +14,8 @@ namespace pr {
     size_t begin;
     size_t sz;
     mutable std::mutex m;
+    std::condition_variable cond;
+    bool isBlocking;
 
     // fonctions private, sans protection mutex
     bool empty() const {
@@ -24,20 +26,34 @@ namespace pr {
       return sz == allocsize;
     }
 
+    void setBlocking(bool isBlocking) {
+      std::unique_lock<std::mutex> lg(m);
+      this->isBlocking = isBlocking;
+      cond.notify_all();
+    }
+
   public:
     Queue(size_t size) : allocsize(size), begin(0), sz(0) {
       tab = new T *[size];
       memset(tab, 0, size * sizeof(T *));
     }
 
+    // Renvoie la taille du remplissage actuel
     size_t size() const {
       std::unique_lock <std::mutex> lg(m);
       return sz;
     }
 
+    // Extrait le prochain élément du buffer
     T *pop() {
       std::unique_lock <std::mutex> lg(m);
-      if (empty()) {
+      while (empty() && isBlocking) {
+        cond.wait(lg);
+      }
+      if (full()) {
+        cond.notify_all();
+      }
+      if (empty() && isBlocking) {
         return nullptr;
       }
       auto ret = tab[begin];
@@ -47,8 +63,15 @@ namespace pr {
       return ret;
     }
 
+    // Insère un élément dans le buffer
     bool push(T *elt) {
       std::unique_lock <std::mutex> lg(m);
+      while (full()) {
+        cond.wait(lg);
+      }
+      if (empty()) {
+        cond.notify_all();
+      }
       if (full()) {
         return false;
       }

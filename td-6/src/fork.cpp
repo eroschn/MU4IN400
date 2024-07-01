@@ -10,19 +10,22 @@
 int main(int argc, char *argv[]) {
 
   // Création de N processus fils en parallèle
-  for (int i = 0; i < N; i++) {
+  std::cout << "Création de N processus fils en parallèle" << std::endl;
 
+  for (int i = 0; i < N; i++) {
     if (fork() == 0) {
-      std::cout << "pid=" << getpid() << ", ppid=" << getppid() << ", process n°" << i << std::endl;
-      exit(0);
+      std::cout << "(création) pid=" << getpid() << ", ppid=" << getppid() << ", process n°" << i << std::endl;
+      exit(i);
     }
-
   }
 
-  // Attente la terminaison des N processus fils
+  // Attente de la terminaison des N processus fils
   for (int i = 0; i < N; i++) {
-    wait(nullptr);
+    int status;
+    pid_t pid = wait(&status); // &status : for exit status
+    //pid_t pid = waitpid(-1, &status, 0); // -1 : for any child process, &status : for exit status, 0 : for options
+    std::cout << "(mort) pid=" << pid << ", process n°" << WEXITSTATUS(status) << std::endl;
   }
 
-  std::cout << "j'ai attendu mes enfants !" << std::endl;
+  std::cout << "Attente de la terminaison des N processus fils" << std::endl;
 }

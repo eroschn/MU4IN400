@@ -1,16 +1,11 @@
-# TME8
+# TME 8 : Sockets Client Serveur
 
-Plus ou moins compatible projet Eclipse CPP, car génère plusieurs executables.
+## 1. Socket Client/Serveur
 
-Compatible autoconf/automake, exécuter cette séquence d'opérations
-après le clone :
+> **Question 1.** En reprenant les questions du TD, implantez les classes `Socket` et `ServerSocket`. Testez-les à l'aide des main client et serveur fournis.
 
-```
-autoreconf -vfi
-./configure 
-make
-```
 
-Les fois suivantes simplement invoquer "make".
 
-En principe sous eclipse en clic droit sur le projet on a l'option de réinvoquer autotools, et de lancer configure et make.
+> **Question 2.** Implantez le `TCPServer` avec un support multi-thread.
+
+
