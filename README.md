@@ -1,4 +1,4 @@
-# PSCR-TME
+# Programmation Système, Concurrente et Répaertie
 
 Provided lab files for PSCR MU4IN400 course.
 
